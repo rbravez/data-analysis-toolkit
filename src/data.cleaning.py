@@ -7,7 +7,7 @@ import sklearn.impute
 import pandas as pd
 import numpy as np
 import statsmodels.api as sm
-from statsmodels.imputation.mice import MCAR
+#from statsmodels.imputation.mice import MCAR
 from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import matplotlib.pyplot as plt
 
@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 ##
 
-def exploratory_descriptive_analysis(df):
+def exploratory_descriptive_analysis(df): 
     """
     Computes summary statistics, variance, skewness, and kurtosis for numerical columns.
     
@@ -25,12 +25,13 @@ def exploratory_descriptive_analysis(df):
     Returns:
         pd.DataFrame: Summary statistics including variance, skewness, and kurtosis.
     """
+    df_numeric = df.select_dtypes(include=[np.number])
     return (
-        df.describe().T
-        .assign(variance=df.var(), skewness=df.skew(), kurtosis=df.apply(st.kurtosis))
+        df_numeric.describe().T
+        .assign(variance=df_numeric.var(), skewness=df_numeric.skew(), kurtosis=df_numeric.apply(st.kurtosis))
     )
 
-def outlier_detector(df):
+def outlier_detector(df): ## Need to debug, isn't really realiable
     """
     Computes the outliers in the dataset via Z-score, Interquartile Range (IQR), 
     and Mahalanobis distance.
@@ -73,7 +74,7 @@ def outlier_detector(df):
 
     return summary_df, outlier_indices
 
-def missing_data_analysis(df):
+#def missing_data_analysis(df): --->>> Doesnt work
     """
     Analyzes missing data using MCAR and MAR techniques.
     
@@ -102,7 +103,7 @@ def missing_data_analysis(df):
     plt.title("Missing Data Heatmap")
     plt.show()
 
-    # Run MCAR Test (Little's MCAR test)
+    # Doesnt work
     mcar_results = None
     try:
         mcar_test = MCAR(df.dropna(axis=1, how="all"))  # Drop columns that are entirely NaN
