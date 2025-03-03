@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 
-def histogram(df, title, variables, xlabel, ylabel, edgecolor='black', bins=30, color=None, density=False, number=1, figsize=(10,6), row=1, column=1):
+def histogram(df, title, variables, xlabel, ylabel, edgecolor='black', bins=30, color=None, density=False, number=1, figsize=(30,18), row=1, column=1):
     """
     Parameters:
     df : DataFrame - The dataset containing the variables
     title : str - Title of the histogram or subplot title
-    variables : list - List of column names to visualize
+    variables : str or list - Column name(s) to visualize
     xlabel : str - Label for x-axis
     ylabel : str - Label for y-axis
     edgecolor : str - Color of bin edges (default: 'black')
@@ -19,10 +19,18 @@ def histogram(df, title, variables, xlabel, ylabel, edgecolor='black', bins=30, 
     row : int - Number of rows for subplot (default: 1)
     column : int - Number of columns for subplot (default: 1)
     """
-    
-    ## DOESNT FUNCTION PROPERLY
 
-    if number == 1:
+    # Ensure variables is always a list
+    if isinstance(variables, str):
+        variables = [variables]
+
+    # Validate that all variables exist in df
+    missing_vars = [var for var in variables if var not in df.columns]
+    if missing_vars:
+        raise ValueError(f"Columns not found in DataFrame: {missing_vars}")
+
+    # If only one plot, use single plot
+    if number == 1 or len(variables) == 1:
         plt.figure(figsize=figsize)
         plt.hist(df[variables[0]], bins=bins, edgecolor=edgecolor, color=color, density=density)
         plt.title(title)
@@ -32,15 +40,15 @@ def histogram(df, title, variables, xlabel, ylabel, edgecolor='black', bins=30, 
     
     else:
         fig, axes = plt.subplots(row, column, figsize=figsize)
-        axes = axes.flatten()  # Flatten in case of multi-row/column layout
+        axes = axes.flatten()  # Ensure axes is always a flat array
         
         for i, var in enumerate(variables):
-            if i < number:  # Ensure we do not exceed the available axes
+            if i < len(axes):  # Ensure we do not exceed subplot limit
                 axes[i].hist(df[var], bins=bins, edgecolor=edgecolor, color=color, density=density)
                 axes[i].set_title(f"{title} - {var}")
                 axes[i].set_xlabel(xlabel)
                 axes[i].set_ylabel(ylabel)
-        
+
         plt.tight_layout()
         plt.show()
 
