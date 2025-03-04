@@ -131,7 +131,7 @@ def boxplot(df, title, variables, xlabel, ylabel, color=None, number=1, figsize=
 
 def scatterplot(df, title, x_vars, y_vars, hue=None, style=None, size=None, figsize=(10,6)):
     """
-    Generate one or multiple scatter plots from a DataFrame.
+    Generate one scatter plot from a DataFrame.
     
     Parameters:
     df : DataFrame - The dataset containing the variables.
